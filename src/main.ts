@@ -78,123 +78,59 @@ const pacientes: Pacientes[] = [
 
 //a) Queremos extraer la lista de paciente que están asignados a la especialidad de Pediatría
 
-const listaPacientesPediatria = (pacientes: Pacientes[]): Pacientes[] => {
-  const listaPacientesPediatria: Pacientes[] = [];
-  for (let i = 0; i < pacientes.length; i++) {
-    if (pacientes[i].especialidad === "Pediatra") {
-      listaPacientesPediatria.push(pacientes[i]);
-    }
-  }
-  return listaPacientesPediatria;
-};
+const listaPacientesPediatria: Pacientes[] = pacientes.filter(
+  (paciente) => paciente.especialidad === "Pediatra"
+);
 
 //b) Queremos extraer la lista de pacientes asignados a Pediatría y que tengan una edad menor de 10 años.
 
-const listaPacientesPediatriaMenor10 = (pacientes: Pacientes[]): Pacientes[] => {
-  const listaPacientesPediatria: Pacientes[] = [];
-  for (let i = 0; i < pacientes.length; i++) {
-    if (pacientes[i].especialidad === "Pediatra" && pacientes[i].edad < 10) {
-      listaPacientesPediatria.push(pacientes[i]);
-    }
-  }
-  return listaPacientesPediatria;
-};
+const listaPacientesPediatriaMenor10: Pacientes[] = pacientes.filter(
+  (paciente) => paciente.especialidad === "Pediatra" && paciente.edad < 10
+);
 
 //APARTADO 2
 
 //Queremos activar el protocolo de urgencia si cualquier de los pacientes tiene un ritmo cardíaco superior a 100 pulsaciones por minuto y una temperatura corporal superior a 39 grados.
 //Es decir, crear una función que devuelve true/false dependiendo si se da la condición.
 
-const activarProtocoloUrgencia = (pacientes: Pacientes[]): boolean => {
-  let activarProctolo: boolean = false;
-  for (let i = 0; i < pacientes.length; i++) {
-    if (pacientes[i].frecuenciaCardiaca > 100 && pacientes[i].temperatura > 39) {
-      activarProctolo = true;
-      break;
-    }
-  }
-  return activarProctolo;
-};
-
+const activarProtocoloUrgencia: boolean = pacientes.some(
+  (paciente) => paciente.frecuenciaCardiaca > 100 && paciente.temperatura > 39
+);
 //APARTADO 3
 //El pediatra no puede atender hoy a los pacientes, queremos reasignar los pacientes asignados a la especialidad de pediatría a la de medico de familia.
 
-const reasignaPacientesAMedicoFamilia = (pacientes: Pacientes[]): Pacientes[] => {
-  let nuevaListaPacientes: Pacientes[] = [...pacientes];
-  for (let i = 0; i < nuevaListaPacientes.length; i++) {
-    if (nuevaListaPacientes[i].especialidad === "Pediatra") {
-      const pacientesReasignados: Pacientes = {
-        ...nuevaListaPacientes[i],
-        especialidad: "Medico de familia",
-      };
-      nuevaListaPacientes = [
-        ...nuevaListaPacientes.slice(0, i),
-        pacientesReasignados,
-        ...nuevaListaPacientes.slice(i + 1),
-      ];
-    }
-  }
-  return nuevaListaPacientes;
-};
+const reasignaPacientesAMedicoFamilia: Pacientes[] = pacientes.map((paciente) =>
+  paciente.especialidad === "Pediatra"
+    ? { ...paciente, especialidad: "Medico de familia" }
+    : paciente
+);
 
 //APARTADO 4
 //Queremos saber si podemos mandar al Pediatra a casa (si no tiene pacientes asignados),
 //comprobar si en la lista hay algún paciente asignado a pediatría
 
-const HayPacientesDePediatria = (pacientes: Pacientes[]): boolean => {
-  let pediatriaSinPacientes: boolean = false;
-  for (let i = 0; i < pacientes.length; i++) {
-    if (pacientes[i].especialidad === "Pediatra") {
-      pediatriaSinPacientes = true;
-      break;
-    }
-  }
-  return pediatriaSinPacientes;
-};
+const HayPacientesDePediatria: boolean = pacientes.some(
+  (paciente) => paciente.especialidad === "Pediatra"
+);
 
 //APARTADO 5
 //Queremos calcular el número total de pacientes que están asignados a la especialidad de Medico de familia, y lo que están asignados a Pediatría y a cardiología
 
-interface NumeroPacientesPorEspecialidad {
-  medicoDeFamilia: number;
-  pediatria: number;
-  cardiologia: number;
-}
-
-const cuentaPacientesPorEspecialidad = (pacientes: Pacientes[]): NumeroPacientesPorEspecialidad => {
-  const numeroPacientesPorEspecialidad: NumeroPacientesPorEspecialidad = {
-    medicoDeFamilia: 0,
-    pediatria: 0,
-    cardiologia: 0,
-  };
-  for (let i = 0; i < pacientes.length; i++) {
-    if (pacientes[i].especialidad === "Medico de familia") {
-      numeroPacientesPorEspecialidad.medicoDeFamilia += 1;
-    }
-    if (pacientes[i].especialidad === "Pediatra") {
-      numeroPacientesPorEspecialidad.pediatria += 1;
-    }
-    if (pacientes[i].especialidad === "Cardiólogo") {
-      numeroPacientesPorEspecialidad.cardiologia += 1;
-    }
-  }
-  return numeroPacientesPorEspecialidad;
-};
+const cuentaPacientesPorEspecialidad = pacientes.reduce((acumulador, paciente) => {
+  !acumulador[paciente.especialidad]
+    ? (acumulador[paciente.especialidad] = 1)
+    : acumulador[paciente.especialidad]++;
+  return acumulador;
+}, {} as Record<string, number>);
 
 //VISUALIZACION DATOS EN CONSOLA
 const iniciarConsola = (): void => {
   console.log("LISTA ORIGINAL:", pacientes);
-  console.log("LISTA PACIENTES PEDIATRÍA:", listaPacientesPediatria(pacientes));
-  console.log(
-    "LISTA PACIENTES PEDIATRÍA MENORES DE 10 AÑOS:",
-    listaPacientesPediatriaMenor10(pacientes)
-  );
-  console.log("ESTADO PROTOCOLO DE URGENCIA:", activarProtocoloUrgencia(pacientes));
-  console.log(
-    "NUEVA LISTA CON PACIENTES DE PEDIATRIA REASIGNADOS:",
-    reasignaPacientesAMedicoFamilia(pacientes)
-  );
-  console.log("EXISTENCIA PACIENTES PARA PEDIATRÍA:", HayPacientesDePediatria(pacientes));
-  console.log("TOTAL PACIENTES POR ESPECIALIDAD:", cuentaPacientesPorEspecialidad(pacientes));
+  console.log("LISTA PACIENTES PEDIATRÍA:", listaPacientesPediatria);
+  console.log("LISTA PACIENTES PEDIATRÍA MENORES DE 10 AÑOS:", listaPacientesPediatriaMenor10);
+  console.log("ESTADO PROTOCOLO DE URGENCIA:", activarProtocoloUrgencia);
+  console.log("NUEVA LISTA PACIENTES DE PEDIATRIA REASIGNADOS:", reasignaPacientesAMedicoFamilia);
+  console.log("EXISTENCIA PACIENTES PARA PEDIATRÍA:", HayPacientesDePediatria);
+  console.log("TOTAL PACIENTES POR ESPECIALIDAD:", cuentaPacientesPorEspecialidad);
 };
 addEventListener("DOMContentLoaded", iniciarConsola);
