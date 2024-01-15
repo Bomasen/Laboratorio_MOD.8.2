@@ -20,7 +20,7 @@ Se utiliza some() nuevamente para crear HayPacientesDePediatria. Retorna true si
 *APARTADO 5:*    
 
 Se utiliza el método reduce() para crear cuentaPacientesPorEspecialidad. Recorre la lista de pacientes y acumula el número de pacientes por especialidad en un objeto.
-He tenido que forzar el tipado del objeto que devuelve reduce con as Recorder (string,number) para que Typescript infiera de forma correcta. (Fuente : chatGPT)
+He tenido que forzar el tipado del objeto que devuelve reduce con as Recorder (Especialidad,number) para que Typescript infiera de forma correcta. (Fuente : chatGPT)
 
 
 

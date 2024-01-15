@@ -121,7 +121,7 @@ const cuentaPacientesPorEspecialidad = pacientes.reduce((acumulador, paciente) =
     ? (acumulador[paciente.especialidad] = 1)
     : acumulador[paciente.especialidad]++;
   return acumulador;
-}, {} as Record<string, number>);
+}, {} as Record<Especialidad, number>);
 
 //VISUALIZACION DATOS EN CONSOLA
 const iniciarConsola = (): void => {
