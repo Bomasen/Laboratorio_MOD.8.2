@@ -116,12 +116,29 @@ const HayPacientesDePediatria: boolean = pacientes.some(
 //APARTADO 5
 //Queremos calcular el número total de pacientes que están asignados a la especialidad de Medico de familia, y lo que están asignados a Pediatría y a cardiología
 
-const cuentaPacientesPorEspecialidad = pacientes.reduce((acumulador, paciente) => {
+interface NumeroPacientesPorEspecialidad {
+  medicoDeFamilia: number;
+  pediatria: number;
+  cardiologia: number;
+}
+const totalSumaPacientesPorEspecialidad = (pacientes: Pacientes[], especialidad: Especialidad) =>  pacientes.reduce(
+    (total, paciente) => paciente.especialidad === especialidad ? ++total : total,0);
+
+const cuentaPacientesPorEspecialidad = (
+  pacientes: Pacientes[]
+): NumeroPacientesPorEspecialidad => ({
+  cardiologia: totalSumaPacientesPorEspecialidad(pacientes,"Cardiólogo"),
+  medicoDeFamilia: totalSumaPacientesPorEspecialidad(pacientes,"Medico de familia"),
+  pediatria: totalSumaPacientesPorEspecialidad(pacientes,"Pediatra"),
+});
+
+/*const cuentaPacientesPorEspecialidad = pacientes.reduce((acumulador, paciente) => {
   !acumulador[paciente.especialidad]
     ? (acumulador[paciente.especialidad] = 1)
     : acumulador[paciente.especialidad]++;
   return acumulador;
 }, {} as Record<Especialidad, number>);
+*/
 
 //VISUALIZACION DATOS EN CONSOLA
 const iniciarConsola = (): void => {
@@ -131,6 +148,6 @@ const iniciarConsola = (): void => {
   console.log("ESTADO PROTOCOLO DE URGENCIA:", activarProtocoloUrgencia);
   console.log("NUEVA LISTA PACIENTES DE PEDIATRIA REASIGNADOS:", reasignaPacientesAMedicoFamilia);
   console.log("EXISTENCIA PACIENTES PARA PEDIATRÍA:", HayPacientesDePediatria);
-  console.log("TOTAL PACIENTES POR ESPECIALIDAD:", cuentaPacientesPorEspecialidad);
+  console.log("TOTAL PACIENTES POR ESPECIALIDAD:", cuentaPacientesPorEspecialidad(pacientes));
 };
 addEventListener("DOMContentLoaded", iniciarConsola);
